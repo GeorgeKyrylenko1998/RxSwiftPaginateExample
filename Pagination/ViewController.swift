@@ -18,8 +18,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var moviestableView: UITableView!
     
     override func viewDidLoad() {
-        moviestableView.estimatedRowHeight = 70
         super.viewDidLoad()
+        moviestableView.estimatedRowHeight = 135
         registrCells()
         bindToTableView()
         getFilms()
@@ -55,19 +55,7 @@ class ViewController: UIViewController {
                 let data = response.data
                 let json = try JSONDecoder().decode(Films.self, from: data)
                 guard let results = json.results else { return }
-                let index = self?.moviestableView.indexPathsForVisibleRows
                 self?.movies.value += results
-                if index?.count != 0{
-                    guard let vis = index?[index!.count - 1] else {return}
-                    guard let visibleNow = self?.moviestableView.indexPathsForVisibleRows else {return}
-                    let visNow = visibleNow[0]
-                    if vis.row < visNow.row{
-                        self?.moviestableView.scrollToRow(at: vis, at: UITableView.ScrollPosition.bottom, animated: false)
-                    } else {
-                        self?.moviestableView.scrollToRow(at: visibleNow[visibleNow.count/2], at: UITableView.ScrollPosition.middle, animated: true)
-                    }
-                    
-                }
             }catch let error{
                 self?.showAlert(text: error.localizedDescription)
             }
